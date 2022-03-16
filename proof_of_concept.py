@@ -2,6 +2,7 @@ import numpy as np
 import streamlit as st 
 import math
 import matplotlib.pyplot as plt
+import pandas as pd
 
 st.header('Exploring Poisson-Gamma Model')
 
@@ -69,14 +70,15 @@ st.markdown(""" Assume we plan to recruit n patients by N centers.
             The patient enrollment rates are gamma distributed with parameters a and b.
             According to Eq. 8, the center occupancy is only a function of n, N and a not b.
             Assuming a mean rate of 1 (m=1), we can conclude that a = 1/Var[rates].
-            Based on real world data 1.2<a<4. Pick n, N and a and investigate the center occupancy. 
-            The following plot corresponds to Fig. 1 in Anisimov and Fedorov paper. """)
+            Based on real world data 1.2<a<4. Let's reconstruct Fig. 1 of Anisimov and Fedorov paper where n = 720 and N=60. """)
+            
+df = pd.read_csv('comb_data.csv')
 
 def beta(m, n):
     return gamma_f(m)*gamma_f(n)/gamma_f(m+n)
 
-n_p = st.number_input('Enter the total number of patients, n', min_value = 1, max_value= 2000, value = 720, step = 1)
-n_c = st.number_input('Enter the total number of centers, N', min_value = 1, max_value= 200, value = 60, step = 1)
+n_p = 720
+n_c = 60
 a = st.slider("""Set the shape parameter, a (i.e. 1/Var[rate])""", min_value=1, max_value=4, step=1)
 
 n_p_var = [i for i in range(1, n_p)]
@@ -85,7 +87,8 @@ m = [0] * len(n_p_var)
 
 
 for j in n_p_var:
-    m[j-1] = n_c*math.comb(n_p, j)*beta(a+j, a*(n_c-1)+n_p-j)/beta(a, a*(n_c-1))
+    x = int(df[df['j'] == j]['c'].tolist()[0])
+    m[j-1] = n_c*x*beta(a+j, a*(n_c-1)+n_p-j)/beta(a, a*(n_c-1))
     
 poisson = [0] * int(n_p/n_c*3)
 

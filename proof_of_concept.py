@@ -10,7 +10,7 @@ st.header('Exploring Poisson-Gamma Model')
 
 st.markdown(""" The following is a simple web app for exploring Poisson-Gamma model for patient recruitment modeling in multicenter clinical trials.
             Let's first get familiar with Poisson and Poisson-Gamma Models. Then compare the predictions of recruitment time and center occupancy
-            between two models.""")
+            between the two models.""")
             
 st.write('Assume we intend to recruit n patients by N centers over time T.')
 
@@ -83,7 +83,7 @@ st.pyplot(fig)
 st.subheader("Analysis of Center Occupancy")
 st.markdown("""According to Poisson model, center occupancy is a function of n and N only. However, according to Poisson-Gamma model (Eq. 8 of 
             Anisimov and Fedorov paper), center occupancy is a function of n, N and a (not b).
-            Assuming a fixed mean rate (e.g. m=1), let's investigate the effect of parameter a on center occupancy.
+            Assuming a fixed mean rate (e.g. m=1), let's investigate the effect of shape parameter, a, on center occupancy.
             **Let's assume m=1, n=720 and N=60 to reconstruct Fig. 1 of Anisimov and Fedorov paper.**""")
 
 latext = r''' 

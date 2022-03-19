@@ -3,10 +3,6 @@ import streamlit as st
 import math
 import matplotlib.pyplot as plt
 import pandas as pd
-from scipy.special import beta
-import operator as op
-from functools import reduce
-from scipy.stats import gamma
 
 st.header('Exploring Poisson-Gamma Model')
 
@@ -45,20 +41,18 @@ st.subheader('Gamma Distribution')
 st.markdown(""" According to Poisson-Gamma model, the prior distribution of rates is a gamma distribution.
             Play with the shape parameter, alpha (a),and rate parameter, beta (b) to investigate how the probability density function changes. """)
             
-a = st.slider("""Set the shape parameter, a""", min_value=0.1, max_value=10.0, step=0.1)
-b = st.slider("""Set the rate parameter, b""", min_value=0.1, max_value=10.0, step=0.1)
+a = st.slider("""Set the shape parameter, a""", min_value=1, max_value=5, step=1)
+b = st.slider("""Set the rate parameter, b""", min_value=1, max_value=5, step=1)
 
 y = [i*0.1 for i in range(100)]
 
 p = [0] * len(y)
 
-#def gamma_f(n):
-    #return math.factorial(n-1)
+def gamma_f(n):
+    return math.factorial(n-1)
 
-#for i in range(len(y)):
-    #p[i] = (b**a/gamma(a))*(y[i]**(a-1))*np.exp(-b*y[i])
-    
-p = gamma.pdf(y, a, 0, 1/b)
+for i in range(len(y)):
+    p[i] = (b**a/gamma_f(a))*(y[i]**(a-1))*np.exp(-b*y[i])
     
 fig, ax = plt.subplots(figsize=(8, 8))
 ax.plot(y, p)
@@ -80,8 +74,8 @@ st.markdown(""" Assume we plan to recruit n patients by N centers.
             
 df = pd.read_csv('comb_data.csv')
 
-#def beta(m, n):
-    #return gamma_f(m)*gamma_f(n)/gamma_f(m+n)
+def beta(m, n):
+    return gamma_f(m)*gamma_f(n)/gamma_f(m+n)
 
 n_p = 720
 n_c = 60
@@ -113,44 +107,6 @@ ax.set_title('Analysis of Center Occupancy ')
 ax.set_xlabel('j', fontsize=15)
 ax.set_ylabel('Mean number of centers with j patients recruited', fontsize=15)
 ax.legend()
-st.pyplot(fig)
-
-def ncr(n, r):
-    r = min(r, n-r)
-    numer = reduce(op.mul, range(n, n-r, -1), 1)
-    denom = reduce(op.mul, range(1, r+1), 1)
-    return numer // denom
-
-st.subheader('Analysis of Recruitment Time')
-
-
-n_p = 200
-n_c = 20
-m = st.slider("""Set the mean rate, m (i.e. E[l] = a/b)""", min_value=1.0, max_value=4.0, step=0.25)
-a = st.slider("""Set the shape parameter, a (i.e. 1/Var[rate])""", min_value=1.0, max_value=4.0, step=0.25)
-
-A = n_p
-B = n_c*m
-y = [i*0.1 for i in range(100)]
-p_1 = [0] * len(y)    
-p_1 = gamma.pdf(y, A, 0, 1/B)
-
-A=a*n_c
-B=a/m
-p_2 = [0] * len(y)
-for i in range(len(y)):
-    p_2[i] = (1/beta(n_p,A))*(y[i]**(n_p-1))*(B**A)/((y[i]+B)**(n_p+A))
-    
-fig, ax = plt.subplots(figsize=(8, 8))
-ax.plot(y, p_1)
-ax.plot(y, p_2, 'r')
-#ax.set_xlim([0, 10])
-#ax.set_ylim([0, 1])
-plt.rcParams['font.size'] = '15'
-plt.rcParams['axes.linewidth'] = 1
-ax.set_title('Gamma Distribution')
-ax.set_xlabel('y', fontsize=15)
-ax.set_ylabel('P(y)', fontsize=15)
 st.pyplot(fig)
 
 

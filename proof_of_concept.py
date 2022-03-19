@@ -140,7 +140,7 @@ st.markdown("""According to Poisson model, the recruitment time is gamma distrib
             and can be represented as T(n, N)=bG(n, 1)/G(aN, 1). The pdf of T(n, N) follows 
             Eq. 1 of the Anisimov and Fedorov paper.""")
             
-st.markdown("""For **n=200** and **N=20**, let's explore how to models predict the recruitment time:""")
+st.markdown("""For **n=100** and **N=20**, let's explore how to models predict the recruitment time:""")
 
 
 n_p = 100
